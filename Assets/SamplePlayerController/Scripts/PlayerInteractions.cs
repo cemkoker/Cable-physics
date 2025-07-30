@@ -51,7 +51,6 @@ namespace HPlayer
                 UpdateHeldObjectPosition();
         }
 
-        #region -input-
 
         private void UpdateInput()
         {
@@ -65,10 +64,6 @@ namespace HPlayer
                     OnInteractionEnd?.Invoke();
             }
         }
-
-        #endregion
-
-        #region -selected object-
 
         private void UpdateSelectedObject()
         {
@@ -93,10 +88,6 @@ namespace HPlayer
                 OnSelect?.Invoke();
             }
         }
-
-        #endregion
-
-        #region -held object-
 
         private void UpdateHeldObjectPosition()
         {
@@ -146,7 +137,5 @@ namespace HPlayer
             if (HeldObject != null)
                 DropObject(HeldObject);
         }
-
-        #endregion
     }
 }

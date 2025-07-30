@@ -56,12 +56,12 @@ namespace HPlayer
 
         private IEnumerator UpdateCursor()
         {
-            if (cursorCanvas == null)
+            if (!cursorCanvas)
                 yield break;
 
             while (playerInteractions.SelectedObject != null)
             {
-                float distance = Vector3.Distance(playerInteractions.SelectedObject.transform.position, transform.position);
+                var distance = Vector3.Distance(playerInteractions.SelectedObject.transform.position, transform.position);
                 cursorCanvas.SetActive(distance >= minShowDistance);
 
                 yield return new WaitForSeconds(0.2f);
