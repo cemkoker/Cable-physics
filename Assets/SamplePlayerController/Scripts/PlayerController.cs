@@ -1,17 +1,22 @@
 using System;
 using UnityEngine;
-using NaughtyAttributes;
 
 namespace HPlayer
 {
     public class PlayerController : MonoBehaviour
     {
-        public enum Mods { None, Default, Sprint }
+        public enum Mods
+        {
+            None,
+            Default,
+            Sprint
+        }
 
         #region -camera-
 
-        [Header("Camera controll")]
-        [SerializeField] private Camera playerCamera;
+        [Header("Camera controll")] [SerializeField]
+        private Camera playerCamera;
+
         [SerializeField] public float mouseSensitivity = 8f;
         [SerializeField, Range(0, -90)] private float minPitch = -90f;
         [SerializeField, Range(0, 90)] private float maxPitch = 90f;
@@ -19,63 +24,50 @@ namespace HPlayer
         private float yaw;
         private float pitch;
 
-        [field: SerializeField, ReadOnly] public bool FreezCamera { get; set; } = false;
+        [field: SerializeField] public bool FreezeCamera { get; set; } = false;
 
         #endregion
 
         #region -movment-
 
-        [Header("Default")]
-        [SerializeField, Min(1f)]
+        [Header("Default")] [SerializeField, Min(1f)]
         private float defaultSpeed = 5f;
 
-        [SerializeField, Min(0.5f)]
-        private float defaultHeight = 1.9f;
+        
 
-        [SerializeField, Min(0f)]
-        private float smoothMoveTime = 0.1f;
+        [SerializeField, Min(0f)] private float smoothMoveTime = 0.1f;
 
-        [SerializeField]
-        private LayerMask groundMask;
+        [SerializeField] private LayerMask groundMask;
 
-        [SerializeField]
-        private float gravity = -18f;
+        [SerializeField] private float gravity = -18f;
 
-        [SerializeField]
-        private bool canJump = true;
+        [SerializeField] private bool canJump = true;
 
-        [SerializeField, ShowIf(nameof(canJump)), Min(1f)]
-        private float defaultJumpHeight = 1.2f;
+        [SerializeField, Min(1f)] private float defaultJumpHeight = 1.2f;
 
-        [Header("Sprint")]
-        [SerializeField]
-        private bool canSprint = true;
+        [Header("Sprint")] [SerializeField] private bool canSprint = true;
 
-        [SerializeField, ShowIf(nameof(canSprint)), Min(1f)]
-        private float sprintSpeed = 9f;
+        [SerializeField, Min(1f)] private float sprintSpeed = 9f;
 
-        [SerializeField, ShowIf(EConditionOperator.And, nameof(canSprint), nameof(canJump)), Min(1f)]
-        private float sprintJumpHeight = 1.4f;
+        [SerializeField, Min(1f)] private float sprintJumpHeight = 1.4f;
 
 
-        [Header("Inputs")]
-        [SerializeField, ReadOnly] private bool inputJump = false;
-        [SerializeField, ReadOnly] private bool inputSprint = false;
-        [SerializeField, ReadOnly] private bool inputCrouch = false;
-        [SerializeField, ReadOnly] private Vector2 inputMove = Vector2.zero;
-        [SerializeField, ReadOnly] private Vector2 inputMouse = Vector2.zero;
+        [Header("Inputs")] [SerializeField] private bool inputJump = false;
+        [SerializeField] private bool inputSprint = false;
+        [SerializeField] private bool inputCrouch = false;
+        [SerializeField] private Vector2 inputMove = Vector2.zero;
+        [SerializeField] private Vector2 inputMouse = Vector2.zero;
 
-        [Header("States")]
-        [SerializeField, ReadOnly] private bool isGrounded = false;
-        [SerializeField, ReadOnly] private Mods currentMod = Mods.None;
-        [SerializeField, ReadOnly] private float currentSpeed;
-        [SerializeField, ReadOnly] private float currentJumpHeight;
+        [Header("States")] [SerializeField] private bool isGrounded = false;
+        [SerializeField] private Mods currentMod = Mods.None;
+        [SerializeField] private float currentSpeed;
+        [SerializeField] private float currentJumpHeight;
 
         private Vector3 smoothV;
         [SerializeField] private Vector3 velocity;
         [SerializeField] private float verticalVelocity;
 
-        [field: SerializeField, ReadOnly] public bool FreezMovement { get; set; } = false;
+        [field: SerializeField] public bool FreezMovement { get; set; } = false;
 
         #endregion
 
@@ -176,7 +168,7 @@ namespace HPlayer
                 inputMouse.y = 0;
             }
 
-            if (FreezCamera)
+            if (FreezeCamera)
                 return;
 
             yaw += inputMouse.x * mouseSensitivity;
@@ -223,6 +215,7 @@ namespace HPlayer
             verticalVelocity = 0;
             controller.enabled = true;
         }
+
         public void SetRotation(float rotX, float rotY)
         {
             if (rotX > 180)
@@ -242,6 +235,7 @@ namespace HPlayer
             playerCamera.clearFlags = CameraClearFlags.Skybox;
             playerCamera.farClipPlane = viewRange;
         }
+
         public void SetCameraBackgroundOnSolidColor(Color color, float viewRange)
         {
             playerCamera.farClipPlane = viewRange;
@@ -251,16 +245,17 @@ namespace HPlayer
 
         private void SetEnable() => SetEnable(true);
         private void SetDisable() => SetEnable(false);
+
         public void SetEnable(bool enableState)
         {
             if (enableState)
             {
-                FreezCamera = true;
+                FreezeCamera = true;
                 enabled = false;
             }
             else
             {
-                FreezCamera = false;
+                FreezeCamera = false;
                 enabled = true;
             }
         }

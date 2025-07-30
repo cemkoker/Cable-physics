@@ -1,5 +1,4 @@
 using UnityEngine;
-using NaughtyAttributes;
 using HInteractions;
 using System;
 
@@ -7,21 +6,20 @@ namespace HPlayer
 {
     public class PlayerInteractions : MonoBehaviour, IObjectHolder
     {
-        [Header("Select")]
-        [SerializeField, Required] private Transform playerCamera;
+        [Header("Select")] [SerializeField] private Transform playerCamera;
         [SerializeField] private float selectRange = 10f;
         [SerializeField] private LayerMask selectLayer;
-        [field: SerializeField, ReadOnly] public Interactable SelectedObject { get; private set; } = null;
+        [field: SerializeField] public Interactable SelectedObject { get; private set; } = null;
 
-        [Header("Hold")]
-        [SerializeField, Required] private Transform handTransform;
+        [Header("Hold")] [SerializeField] private Transform handTransform;
         [SerializeField, Min(1)] private float holdingForce = 0.5f;
         [SerializeField] private int heldObjectLayer;
         [SerializeField] [Range(0f, 90f)] private float heldClamXRotation = 45f;
-        [field: SerializeField, ReadOnly] public Liftable HeldObject { get; private set; } = null;
+        [field: SerializeField] public Liftable HeldObject { get; private set; } = null;
 
         [field: Header("Input")]
-        [field: SerializeField, ReadOnly] public bool Interacting { get; private set; } = false;
+        [field: SerializeField]
+        public bool Interacting { get; private set; } = false;
 
         public event Action OnSelect;
         public event Action OnDeselect;
@@ -35,6 +33,7 @@ namespace HPlayer
 
             PlayerController.OnPlayerEnterPortal += CheckHeldObjectOnTeleport;
         }
+
         private void OnDisable()
         {
             OnInteractionStart -= ChangeHeldObject;
@@ -90,7 +89,6 @@ namespace HPlayer
 
             if (foundInteractable && foundInteractable.enabled)
             {
-
                 foundInteractable.Select();
                 OnSelect?.Invoke();
             }
@@ -102,7 +100,7 @@ namespace HPlayer
 
         private void UpdateHeldObjectPosition()
         {
-            HeldObject.Rigidbody.velocity = (handTransform.position - HeldObject.transform.position) * holdingForce;
+            HeldObject.Rigidbody.linearVelocity = (handTransform.position - HeldObject.transform.position) * holdingForce;
 
             Vector3 handRot = handTransform.rotation.eulerAngles;
             if (handRot.x > 180f)
@@ -110,6 +108,7 @@ namespace HPlayer
             handRot.x = Mathf.Clamp(handRot.x, -heldClamXRotation, heldClamXRotation);
             HeldObject.transform.rotation = Quaternion.Euler(handRot + HeldObject.LiftDirectionOffset);
         }
+
         private void ChangeHeldObject()
         {
             if (HeldObject)
@@ -117,6 +116,7 @@ namespace HPlayer
             else if (SelectedObject is Liftable liftable)
                 PickUpObject(liftable);
         }
+
         private void PickUpObject(Liftable obj)
         {
             if (obj == null)
@@ -128,6 +128,7 @@ namespace HPlayer
             HeldObject = obj;
             obj.PickUp(this, heldObjectLayer);
         }
+
         private void DropObject(Liftable obj)
         {
             if (obj == null)
